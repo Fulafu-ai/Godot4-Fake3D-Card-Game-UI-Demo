@@ -1,0 +1,15 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://qh5qtmn0x46a"
+valid=false
+
+[deps]
+
+source_file="res://小丑牌/assets/poker_infos.csv"
+
+[params]
+
+compress=true
+delimiter=0

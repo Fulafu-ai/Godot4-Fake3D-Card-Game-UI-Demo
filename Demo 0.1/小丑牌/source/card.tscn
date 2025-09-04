@@ -1,0 +1,178 @@
+[gd_scene load_steps=21 format=3 uid="uid://co3o2xwobx5q4"]
+
+[ext_resource type="Shader" uid="uid://bkrwjms4rnsln" path="res://小丑牌/shader/dissolve2d.gdshader" id="1_7orpc"]
+[ext_resource type="Script" uid="uid://bi5lwxuff2imw" path="res://小丑牌/source/card.gd" id="1_d4b2m"]
+[ext_resource type="Shader" uid="uid://bxl4u4ight1k1" path="res://小丑牌/shader/fake3d_shadow.gdshader" id="2_7orpc"]
+[ext_resource type="Shader" uid="uid://cdhjjjgikvevl" path="res://小丑牌/shader/fake3d.gdshader" id="2_w7ss3"]
+[ext_resource type="Texture2D" uid="uid://bt5axd1landpu" path="res://小丑牌/art/Top-Down/Cards/Hearts/10.png" id="3_d4b2m"]
+[ext_resource type="Script" uid="uid://doe4a27purco5" path="res://script/card_state_machine.gd" id="6_64ja5"]
+[ext_resource type="Texture2D" uid="uid://biuigahoyihal" path="res://小丑牌/art/Top-Down/Cards/CardsBack/0.png" id="6_084tu"]
+[ext_resource type="Script" uid="uid://6vg7ttv3p1ju" path="res://script/card_states/idle.gd" id="7_6w0sl"]
+[ext_resource type="Script" uid="uid://fi442bog7h4b" path="res://script/card_states/dragging.gd" id="8_084tu"]
+[ext_resource type="Script" uid="uid://6258ghkcyjc8" path="res://script/card_states/destroy.gd" id="9_gcugs"]
+[ext_resource type="Script" uid="uid://1a3netars12q" path="res://script/card_states/display.gd" id="9_p7vis"]
+[ext_resource type="Script" uid="uid://ttbb1uqi7muu" path="res://script/card_states/following.gd" id="12_p7vis"]
+[ext_resource type="Script" uid="uid://roohwijku4w3" path="res://script/card_state.gd" id="13_xxauj"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xxauj"]
+resource_local_to_scene = true
+seed = -54
+frequency = 0.0019
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_erjpa"]
+resource_local_to_scene = true
+noise = SubResource("FastNoiseLite_xxauj")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hmb0o"]
+resource_local_to_scene = true
+shader = ExtResource("1_7orpc")
+shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_erjpa")
+shader_parameter/dissolve_value = 1.0
+shader_parameter/burn_border_size = 0.05
+shader_parameter/burn_color = Color(1, 0.3, 0, 0.780392)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d4b2m"]
+resource_local_to_scene = true
+shader = ExtResource("2_7orpc")
+shader_parameter/fov = 90.0
+shader_parameter/cull_back = false
+shader_parameter/selected = false
+shader_parameter/selected_color = Color(0.741, 0.78, 0, 0.545098)
+shader_parameter/y_rot = 0.0
+shader_parameter/x_rot = 0.0
+shader_parameter/alpha = 0.5
+shader_parameter/inset = 0.0
+shader_parameter/delete_color = Color(0, 0.5, 0.5, 1)
+shader_parameter/delete_tolerance = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gcugs"]
+resource_local_to_scene = true
+shader = ExtResource("2_w7ss3")
+shader_parameter/fov = 90.0
+shader_parameter/cull_back = true
+shader_parameter/y_rot = -180.0
+shader_parameter/x_rot = 0.0
+shader_parameter/inset = 0.0
+shader_parameter/delete_color = Color(0, 0.5, 0.5, 1)
+shader_parameter/delete_tolerance = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tnkjx"]
+resource_local_to_scene = true
+shader = ExtResource("2_w7ss3")
+shader_parameter/fov = 90.0
+shader_parameter/cull_back = true
+shader_parameter/y_rot = 0.0
+shader_parameter/x_rot = 0.0
+shader_parameter/inset = 0.0
+shader_parameter/delete_color = Color(0, 0.5, 0.5, 1)
+shader_parameter/delete_tolerance = 0.2
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w7ss3"]
+size = Vector2(88, 124)
+
+[node name="CardUI" type="Control" groups=["selectable"]]
+z_index = 1
+z_as_relative = false
+material = SubResource("ShaderMaterial_hmb0o")
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 88.0
+offset_bottom = 124.0
+pivot_offset = Vector2(44, 80)
+script = ExtResource("1_d4b2m")
+fov = 60.0
+shadow_offset_max = 20.0
+index = 9
+
+[node name="Shadow" type="TextureRect" parent="."]
+unique_name_in_owner = true
+z_index = -2
+material = SubResource("ShaderMaterial_d4b2m")
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 0
+offset_left = 1.0
+offset_top = 12.3333
+offset_right = 89.0
+offset_bottom = 136.333
+pivot_offset = Vector2(44, 62)
+mouse_filter = 2
+texture = ExtResource("3_d4b2m")
+
+[node name="CardBackTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_gcugs")
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 0
+offset_right = 88.0
+offset_bottom = 124.0
+pivot_offset = Vector2(44, 62)
+texture = ExtResource("6_084tu")
+
+[node name="CardTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_tnkjx")
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 0
+offset_right = 88.0
+offset_bottom = 124.0
+pivot_offset = Vector2(44, 62)
+texture = ExtResource("3_d4b2m")
+
+[node name="AreaDestroy" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaDestroy"]
+position = Vector2(44, 62)
+shape = SubResource("RectangleShape2D_w7ss3")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("6_64ja5")
+initial_state = NodePath("Idle")
+metadata/_custom_type_script = "uid://dnm5pi3mm2aqp"
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("7_6w0sl")
+metadata/_custom_type_script = "uid://roohwijku4w3"
+
+[node name="Display" type="Node" parent="StateMachine"]
+script = ExtResource("9_p7vis")
+card_state = 1
+metadata/_custom_type_script = "uid://roohwijku4w3"
+
+[node name="Dragging" type="Node" parent="StateMachine"]
+script = ExtResource("8_084tu")
+card_state = 2
+metadata/_custom_type_script = "uid://roohwijku4w3"
+
+[node name="Destroy" type="Node" parent="StateMachine"]
+script = ExtResource("9_gcugs")
+card_state = 3
+metadata/_custom_type_script = "uid://roohwijku4w3"
+
+[node name="Following" type="Node" parent="StateMachine"]
+script = ExtResource("12_p7vis")
+card_state = 4
+metadata/_custom_type_script = "uid://roohwijku4w3"
+
+[node name="No_interact" type="Node" parent="StateMachine"]
+script = ExtResource("13_xxauj")
+card_state = 5
+metadata/_custom_type_script = "uid://roohwijku4w3"
+
+[node name="Label" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 138.0
+offset_right = 88.0
+offset_bottom = 161.0
+
+[connection signal="destroy_requested" from="." to="StateMachine" method="_on_destroy_requested"]
+[connection signal="follow_requested" from="." to="StateMachine" method="_on_follow_requested"]
+[connection signal="gui_input" from="." to="StateMachine" method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_entered" from="." to="StateMachine" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="mouse_exited" from="." to="StateMachine" method="_on_mouse_exited"]
+[connection signal="reparent_requested" from="." to="." method="_on_reparent_requested"]
+[connection signal="selected_left_click" from="." to="StateMachine" method="_on_selected_left_click"]

@@ -1,0 +1,226 @@
+[gd_scene load_steps=16 format=3 uid="uid://chwi8yrj7spkb"]
+
+[ext_resource type="Script" uid="uid://cohxkjk04cphk" path="res://小丑牌/source/destroy_area.gd" id="1_55wp0"]
+[ext_resource type="PackedScene" uid="uid://co3o2xwobx5q4" path="res://小丑牌/source/card.tscn" id="1_q17kq"]
+[ext_resource type="PackedScene" uid="uid://cnhas3npj4dpu" path="res://小丑牌/source/card_selector.tscn" id="2_mw34v"]
+[ext_resource type="Texture2D" uid="uid://bvdhvtl3abeln" path="res://小丑牌/art/Top-Down/Cards/CardsDeck/1.png" id="2_qmkcm"]
+[ext_resource type="Script" uid="uid://dty03cp4jsqur" path="res://小丑牌/source/drawn_cards.gd" id="3_cxmui"]
+[ext_resource type="PackedScene" uid="uid://cjntee061mekw" path="res://小丑牌/source/card_table.tscn" id="4_j2h83"]
+[ext_resource type="Shader" uid="uid://bkrwjms4rnsln" path="res://小丑牌/shader/dissolve2d.gdshader" id="5_7n5ar"]
+[ext_resource type="Script" uid="uid://br6fufg6mb7is" path="res://小丑牌/source/dragging_cards.gd" id="7_r8i00"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q17kq"]
+bg_color = Color(1, 0, 0, 0.392157)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q17kq"]
+size = Vector2(53, 33)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_k7o0p"]
+seed = 134
+frequency = 0.002
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_64ja5"]
+noise = SubResource("FastNoiseLite_k7o0p")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j2h83"]
+resource_local_to_scene = true
+shader = ExtResource("5_7n5ar")
+shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_64ja5")
+shader_parameter/dissolve_value = 1.0
+shader_parameter/burn_border_size = 0.05
+shader_parameter/burn_color = Color(1, 0.3, 0, 0.780392)
+
+[sub_resource type="Curve" id="Curve_r8i00"]
+_limits = [-0.25, 0.31491, 0.0, 1.0]
+_data = [Vector2(0, -0.1), 0.0, 1.0, 0, 0, Vector2(0.5, 0.1), 0.0, 0.0, 0, 0, Vector2(1, -0.1), -1.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_kk5xv"]
+_limits = [-15.0, 15.0, 0.0, 1.0]
+_data = [Vector2(0, -15), 0.0, 60.0, 0, 0, Vector2(0.5, 0), 15.0, 15.0, 0, 0, Vector2(0.998584, 15), 60.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="Main" type="Control" groups=["main"]]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Backgrounds" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="DrawButton" type="Button" parent="Backgrounds"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -366.0
+offset_top = -50.0
+offset_right = -255.0
+offset_bottom = -19.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "发牌/取消发牌"
+
+[node name="DestroyArea" type="MarginContainer" parent="Backgrounds"]
+z_index = -2
+custom_minimum_size = Vector2(110, 150)
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -504.0
+offset_top = -194.0
+offset_right = -394.0
+offset_bottom = -44.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("1_55wp0")
+
+[node name="Panel" type="Panel" parent="Backgrounds/DestroyArea"]
+z_index = -2
+z_as_relative = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_q17kq")
+
+[node name="Label" type="Label" parent="Backgrounds/DestroyArea"]
+layout_mode = 2
+text = "销毁处"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Area2D" type="Area2D" parent="Backgrounds/DestroyArea"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Backgrounds/DestroyArea/Area2D"]
+position = Vector2(55, 76)
+shape = SubResource("RectangleShape2D_q17kq")
+
+[node name="TableCards" type="CanvasLayer" parent="."]
+
+[node name="Hand" parent="TableCards" instance=ExtResource("4_j2h83")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -188.0
+offset_top = -549.0
+offset_right = 245.0
+offset_bottom = -408.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Hand3" parent="TableCards" instance=ExtResource("4_j2h83")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -188.0
+offset_top = -366.0
+offset_right = 245.0
+offset_bottom = -225.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Hand2" parent="TableCards" instance=ExtResource("4_j2h83")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -188.0
+offset_top = -182.0
+offset_right = 245.0
+offset_bottom = -41.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="DrawPileIcon" type="Control" parent="TableCards"]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -353.0
+offset_top = -194.0
+offset_right = -313.0
+offset_bottom = -154.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="TableCards/DrawPileIcon"]
+custom_minimum_size = Vector2(88, 140)
+layout_mode = 0
+offset_right = 88.0
+offset_bottom = 140.0
+texture = ExtResource("2_qmkcm")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DrawnCards" type="Control" parent="TableCards" node_paths=PackedStringArray("from")]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -85.0
+offset_bottom = -85.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_cxmui")
+from = NodePath("../DrawPileIcon")
+card_offset_x = 100.0
+
+[node name="Card" parent="TableCards/DrawnCards" instance=ExtResource("1_q17kq")]
+material = SubResource("ShaderMaterial_j2h83")
+offset_left = -513.0
+offset_top = 55.0
+offset_right = -425.0
+offset_bottom = 179.0
+
+[node name="DraggingCards" type="Control" parent="TableCards" groups=["dragger"]]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+script = ExtResource("7_r8i00")
+position_y_curve = SubResource("Curve_r8i00")
+rotation_z_curve = SubResource("Curve_kk5xv")
+width = 0.2
+expand_width = 1.0
+delta_y_max = 0.2
+
+[node name="Label" type="Label" parent="TableCards/DraggingCards"]
+visible = false
+layout_mode = 0
+offset_top = 73.0
+offset_right = 67.0
+offset_bottom = 134.0
+
+[node name="Selector" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="CardSelector" parent="Selector" instance=ExtResource("2_mw34v")]
+mouse_filter = 2
+
+[connection signal="pressed" from="Backgrounds/DrawButton" to="TableCards/DrawnCards" method="_on_draw_button_pressed"]
+[connection signal="area_entered" from="Backgrounds/DestroyArea/Area2D" to="Backgrounds/DestroyArea" method="_on_area_2d_area_entered"]
+[connection signal="child_entered_tree" from="TableCards/DraggingCards" to="TableCards/DraggingCards" method="_on_child_entered_tree"]
+[connection signal="child_exiting_tree" from="TableCards/DraggingCards" to="TableCards/DraggingCards" method="_on_child_exiting_tree"]
+[connection signal="child_order_changed" from="TableCards/DraggingCards" to="TableCards/DraggingCards" method="_on_child_order_changed"]

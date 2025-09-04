@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://cnhas3npj4dpu"]
+
+[ext_resource type="Script" uid="uid://kt1an751be7j" path="res://小丑牌/source/card_selector.gd" id="1_ywsjf"]
+
+[node name="CardSelector" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ywsjf")
+color = Color(0.325, 0.43875, 0.65, 0.411765)
+border_color = Color(0.325, 0.400833, 0.65, 1)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 169.0
+offset_bottom = 52.0

@@ -1,0 +1,125 @@
+[gd_scene load_steps=6 format=3 uid="uid://cjntee061mekw"]
+
+[ext_resource type="Script" uid="uid://cx24fqcl3p3rg" path="res://小丑牌/source/card_table.gd" id="1_jb1k5"]
+
+[sub_resource type="Curve" id="Curve_kw0kw"]
+_limits = [-0.25, 0.31491, 0.0, 1.0]
+_data = [Vector2(0, -0.1), 0.0, 1.0, 0, 0, Vector2(0.5, 0.1), 0.0, 0.0, 0, 0, Vector2(1, -0.1), -1.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_y4j1s"]
+_limits = [-15.0, 15.0, 0.0, 1.0]
+_data = [Vector2(0, -15), 0.0, 60.0, 0, 0, Vector2(0.5, 0), 15.0, 15.0, 0, 0, Vector2(0.998584, 15), 60.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7n5ar"]
+bg_color = Color(0, 0.0953333, 0.22, 0.372549)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kw0kw"]
+size = Vector2(410.5, 141)
+
+[node name="CardTable" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 433.0
+offset_bottom = 141.0
+mouse_filter = 2
+script = ExtResource("1_jb1k5")
+position_y_curve = SubResource("Curve_kw0kw")
+rotation_z_curve = SubResource("Curve_y4j1s")
+volume = 11
+shrink_rate = 0.4
+
+[node name="Cards" type="Control" parent="."]
+unique_name_in_owner = true
+z_index = -1
+layout_mode = 1
+anchor_right = 0.945
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = -1.0
+offset_right = -0.185028
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Background" type="Panel" parent="."]
+unique_name_in_owner = true
+z_index = -2
+z_as_relative = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.947
+anchor_bottom = 0.993
+offset_right = 89.949
+offset_bottom = 0.987
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_7n5ar")
+
+[node name="PosSettler" type="ScrollContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_right = -53.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VisualCardsContainer" type="HBoxContainer" parent="PosSettler"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+alignment = 1
+
+[node name="Area2D" type="Area2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-1, -1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(205.75, 71)
+shape = SubResource("RectangleShape2D_kw0kw")
+
+[node name="ButtonBox" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = -50.0
+offset_right = -10.0
+offset_bottom = 141.0
+alignment = 1
+
+[node name="SortButton" type="Button" parent="ButtonBox"]
+layout_mode = 2
+text = "理牌"
+
+[node name="ShrinkButton" type="Button" parent="ButtonBox"]
+layout_mode = 2
+toggle_mode = true
+text = "收缩"
+
+[node name="DeleteButton" type="Button" parent="ButtonBox"]
+layout_mode = 2
+toggle_mode = true
+text = "删牌"
+
+[node name="CheckAllButton" type="Button" parent="ButtonBox"]
+layout_mode = 2
+toggle_mode = true
+text = "全选"
+
+[connection signal="child_entered_tree" from="Cards" to="." method="_on_cards_entered"]
+[connection signal="child_exiting_tree" from="Cards" to="." method="_on_cards_exited"]
+[connection signal="child_order_changed" from="Cards" to="." method="_on_cards_order_changed"]
+[connection signal="pressed" from="ButtonBox/SortButton" to="." method="_on_sort_button_pressed"]
+[connection signal="toggled" from="ButtonBox/ShrinkButton" to="." method="_on_shrink_button_toggled"]
+[connection signal="pressed" from="ButtonBox/DeleteButton" to="." method="_on_delete_button_pressed"]
+[connection signal="pressed" from="ButtonBox/CheckAllButton" to="." method="_on_check_all_button_pressed"]
